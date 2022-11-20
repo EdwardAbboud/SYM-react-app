@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import User, {
   validateUser,
   validateUserUpdate,
@@ -116,7 +116,7 @@ export const updateUser = async (req, res) => {
         : user.symScore;
     }
 
-    const hashPasswordCurrent = await bcrypt.hash(
+    const hashPasswordCurrent = await bcryptjs.hash(
       req.body.password.currentPassword,
       user.SALT
     );
@@ -125,8 +125,8 @@ export const updateUser = async (req, res) => {
       hashPasswordCurrent === user.password &&
       req.body.password.newPassword !== req.body.password.currentPassword
     ) {
-      const saltNew = await bcrypt.genSalt(Number(process.env.SALT));
-      const hashNewPassword = await bcrypt.hash(
+      const saltNew = await bcryptjs.genSalt(Number(process.env.SALT));
+      const hashNewPassword = await bcryptjs.hash(
         req.body.password.newPassword,
         saltNew
       );
@@ -273,8 +273,8 @@ export const createUser = async (req, res) => {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashPassword = await bcrypt.hash(user.password, salt);
+    const salt = await bcryptjs.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcryptjs.hash(user.password, salt);
 
     const newUser = await new User({
       ...user,

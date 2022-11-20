@@ -1,7 +1,7 @@
 // import { logError } from "../util/logging.js";
 import User from "../models/User.js";
 import Joi from "joi";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 
 export const authenticate = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const authenticate = async (req, res) => {
       return res.status(401).send({ message: "Invalid email" });
     }
 
-    const validPassword = await bcrypt.compare(
+    const validPassword = await bcryptjs.compare(
       req.body.password,
       user.password
     );
