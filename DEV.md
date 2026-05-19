@@ -10,13 +10,15 @@ To start developing, make sure you have created the `.env` files and did the set
 
 The client will be built using `webpack`. The configuration for that is in the `webpack.config.js` file. When running in production the command `npm run build` will be run which will create a `dist` folder with the compiled version of the code. When running in dev mode the `webpack-dev-server` will build it in memory. This will also automatically rebuild on file changes!
 
-Our client will always run on `https://localhost:8080`. So if it does not automatically open your browser you can go to that URL. It will connect to the URL put in the `.env` file, defaulting to `https://localhost:5000`.
+Our client will always run on `http://localhost:8080`. So if it does not automatically open your browser you can go to that URL. It will connect to the URL put in the `.env` file, defaulting to `http://localhost:5001`. If `http://localhost:5500` shows project files, that is usually VS Code Live Server serving the folder directly, not the webpack dev server.
 
 You will also notice that to connect to the server our `useFetch` hook adds `/api` to the url. This is because on `heroku` our backend not only has its own routes but also hosts the client code. This way it allows us to differentiate between what needs to return the client code and what is an actual request to our backend.
 
 ### 1.2 Server
 
 The server will be run from the `index.js` file. This is separate from the `app.js` for testing purposes. In dev mode it will be ran using `nodemon`, in production using `node`. The `.env` determines the port and the URL to the mongodb database. If you change the port here, then don't forget to also change it on the client side.
+
+If the server reports that a port is already in use, check what is listening on it with `lsof -nP -iTCP:<port> -sTCP:LISTEN`. On macOS, `ControlCe`/Control Center commonly owns port `5000` when AirPlay Receiver is enabled.
 
 You probably want to set up your own personal mongodb database for your own usage so that you don't interfere with other developers and use that url most of the time.
 
