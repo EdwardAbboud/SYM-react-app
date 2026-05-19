@@ -19,8 +19,20 @@ if (port == null) {
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       logInfo(`Server started on port ${port}`);
+    });
+
+    server.on("error", (error) => {
+      if (error.code === "EADDRINUSE") {
+        logError(
+          `Port ${port} is already in use. Stop the process using it or change PORT in server/.env and the matching client API URL. On macOS, port 5000 is often used by Control Center/AirPlay Receiver.`
+        );
+        process.exit(1);
+      }
+
+      logError(error);
+      process.exit(1);
     });
   } catch (error) {
     logError(error);

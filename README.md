@@ -31,6 +31,10 @@ To run the app in dev mode you can run the following command in the main directo
 
 `npm run dev`
 
+Open the client at `http://localhost:8080`. If `http://localhost:5500` shows project files, that is usually VS Code Live Server serving the folder directly, not this app.
+
+If the server fails with `EADDRINUSE`, another process is already using the backend port. On macOS, port `5000` is often used by Control Center/AirPlay Receiver. This project uses `5001` locally to avoid that conflict.
+
 ## 2. Code structure
 
 ```
@@ -62,4 +66,3 @@ server
     └── util
     index.js
 ```
-

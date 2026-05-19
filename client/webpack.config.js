@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-require("dotenv").config();
+require("dotenv").config({ override: true });
 
 module.exports = {
   mode: "development",
@@ -43,12 +43,13 @@ module.exports = {
 
     // All variables in our .env should be mentioned here
     new webpack.EnvironmentPlugin({
-      // Default is '' because on our heroku servers we want to have it default to our current URL
-      BASE_SERVER_URL: "",
+      BASE_SERVER_URL: "http://localhost:5001",
     }),
   ],
   // To tell the dev server that everything should go back to index.html
   devServer: {
+    host: "127.0.0.1",
+    port: 8080,
     historyApiFallback: true,
   },
 };

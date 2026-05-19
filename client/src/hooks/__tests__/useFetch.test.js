@@ -1,4 +1,4 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook, act, waitFor } from "@testing-library/react";
 
 import useFetch from "../useFetch";
 import {
@@ -15,9 +15,7 @@ describe("useFetch", () => {
   it("Fetch process works as expected", async () => {
     fetch.mockResponseOnce(getUsersSuccessMock());
     const mockSuccessFn = jest.fn(() => {});
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useFetch("/", mockSuccessFn)
-    );
+    const { result } = renderHook(() => useFetch("/", mockSuccessFn));
 
     // Nothing is performed yet
     expect(fetch.mock.calls.length).toEqual(0);
@@ -31,10 +29,7 @@ describe("useFetch", () => {
     // Should be loading
     expect(result.current.isLoading).toBe(true);
 
-    await waitForNextUpdate();
-
-    // Should not be loading anymore
-    expect(result.current.isLoading).toBe(false);
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     // Fetch should have been called and our success function should have been called
     expect(fetch.mock.calls.length).toEqual(1);
@@ -44,9 +39,7 @@ describe("useFetch", () => {
   it("Should set the error if something goes wrong on the server", async () => {
     fetch.mockResponseOnce(getUsersFailedMock());
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useFetch("/", () => {})
-    );
+    const { result } = renderHook(() => useFetch("/", () => {}));
 
     act(() => {
       result.current.performFetch();
@@ -56,10 +49,7 @@ describe("useFetch", () => {
     expect(result.current.isLoading).toBe(true);
     expect(result.current.error).toBe(null);
 
-    await waitForNextUpdate();
-
-    // Should not be loading anymore
-    expect(result.current.isLoading).toBe(false);
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     // Should have an error
     expect(result.current.error).not.toBe(null);
